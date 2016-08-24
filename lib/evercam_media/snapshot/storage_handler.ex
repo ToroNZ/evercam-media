@@ -11,8 +11,10 @@ defmodule EvercamMedia.Snapshot.StorageHandler do
     {camera_exid, timestamp, image} = data
     spawn fn ->
       last_image = ConCache.get(:last_snapshot, camera_exid)
-      if last_image != image do
+      with true <- last_image != image do
         Storage.save(camera_exid, timestamp, image, "Evercam Proxy")
+      else
+        false -> Logger.info "[#{camera_exid}] [save_image] [duplicate_image]"
       end
       ConCache.put(:last_snapshot, camera_exid, image)
     end
