@@ -46,7 +46,7 @@ defmodule EvercamMedia.StreamController do
     end
   end
 
-  def check_port(camera) do
+  defp check_port(camera) do
     host = Camera.host(camera)
     port = Camera.port(camera, "external", "rtsp")
     if !Util.port_open?(host, "#{port}") do
